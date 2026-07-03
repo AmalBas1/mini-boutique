@@ -4,12 +4,15 @@ import ProductList from "./components/ProductList";
 import productsData from "./data/products.json"
 import CategoryFilter from './components/CategoryFilter';
 import Cart from "./components/Cart";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 
 function App() {
   const [products, setProducts] = useState(productsData)
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Tous")
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
 
   const displayProducts = selectedCategory === "Tous"
@@ -31,17 +34,29 @@ function App() {
   const removeFromCart = (id) => {
     setCart(cart.filter(item => item.id !== id))
   };
-
+  
   return(
+
+
     <div className="App">
-      <h1>Mini Boutique</h1>
+      <div>         
+        <Header cartCount={cart.length} onOpenCart={() => {console.log("Clic detecté, isCartOpen devient true");setIsCartOpen(true)}} />
+      </div>
       <CategoryFilter products = {products} setCategory = {setSelectedCategory}/>
       <ProductList
       products={displayProducts}
       onAddToCart={addToCart}
       onDeleteProduct={deleteProduct}/>
 
-      <Cart cart={cart} onRemoveFromCart={removeFromCart}/>
+      {isCartOpen && (
+        <Cart cart={cart} onRemoveFromCart={removeFromCart} onClose={() => setIsCartOpen(false)} />
+      )}
+
+      <div>
+        <Footer/>
+      </div>
+
+      
 
     </div>
   )
